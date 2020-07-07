@@ -7,6 +7,7 @@
 #include <time.h>
 
 #include "TetrisPiece.h"
+#include "PieceController.h"
 #define LENGTH 20
 #define WIDTH 10
 #define NUMPIECE 7
@@ -17,6 +18,15 @@
 
 using namespace sf;
 using namespace std;
+
+//Define array of tetris pieces
+static TetrisPiece pieceArray[NUMPIECE];
+static PieceController control;
+
+/*Argument: None
+ *Return: void
+ */
+void updateMovement();
 
 /*Argument: array of tetris pieces from the main method
  *Return: void
@@ -41,12 +51,11 @@ int main(int argc, char** argv) {
 	Sprite sprite(texture); //calling the Sprite constructor
 	sprite.setTextureRect(IntRect(0, 0, 27, 27)); //extract only a rectangle of the sprite	
 	
-	//Define array of tetris pieces
-	TetrisPiece pieceArray[NUMPIECE];
+	
 	
 	//Construct pieceArray
 	pieceArrayConstruction(pieceArray);
-
+	
 		
 	//Control the entire game
 	while (gameWindow.isOpen()) {
@@ -59,8 +68,29 @@ int main(int argc, char** argv) {
 			if (e.type == Event::Closed) {
 				gameWindow.close();
 			}
-		}
+			
+			//Handle key pressed on keyboard mode
+			if (e.type == Event::KeyPressed) {
 
+				//Rotate if pressed UP
+				if (e.key.code == Keyboard::Up) {
+					control.set_rotate(true);
+				}
+				
+				//Update dx if pressed left
+				if (e.key.code == Keyboard::Left) {
+					control.set_dx(dx - 1);
+				}
+
+				//Update dx if pressed right
+				if (e.key.code == Keyboard::Right) {
+					control.set_dx(dx + 1);
+				}
+			}
+		}
+	
+		//updateMovement();
+		
 		//Clear the screen
 		gameWindow.clear(Color::White);
 		
@@ -70,11 +100,8 @@ int main(int argc, char** argv) {
 			int x_tile = (*(pieceArray + piece)).getTile(i) % 2;
 		        int y_tile = (*(pieceArray + piece)).getTile(i) / 2;
 			sprite.setPosition(x_tile * SIZE, y_tile * SIZE);
-			gameWindow.draw(sprite);
+			gameWindow.draw(sprite); //Draw the sprite
 		}	
-
-		//Draw the sprite
-		gameWindow.draw(sprite);
 
 		//Update the window
 		gameWindow.display();
@@ -83,6 +110,10 @@ int main(int argc, char** argv) {
 	
 	return EXIT_SUCCESS;
 }	
+
+void updateMovement() {
+	
+}
 
 
 void pieceArrayConstruction(TetrisPiece* const pieceArray) {
