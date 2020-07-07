@@ -1,6 +1,5 @@
 //Author: Donavan Tran
 /*Tetris program controlled using keyboard or using flex sensor
- *Verion 1.1
  */
 
 #include <SFML/Graphics.hpp>
@@ -10,23 +9,24 @@
 #include "TetrisPiece.h"
 #define LENGTH 20
 #define WIDTH 10
-
+#define NUMPIECE 7
+#define NUMTILES 4
+#define SIZE 27
 //global field. Declare static for internal linkage only
-static int field[LENGTH][WIDTH] = { 0 };
-
-//Declare array of different 
-const int pieces[7][4] =
-{
-	3, 5, 7, 6, //J
-	1, 3, 5, 7, //I
-	2, 3, 5, 7, //L
-	2, 3, 4, 5, //O
-	3, 5, 4, 6, //S
-	3, 5, 4, 7, //T
-	2, 4, 5, 7, //Z
-}; 
+//static int field[LENGTH][WIDTH] = { 0 };
 
 using namespace sf;
+using namespace std;
+
+/*Argument: array of tetris pieces from the main method
+ *Return: void
+ */
+void pieceArrayConstruction(TetrisPiece* pieceArray);
+
+/*Tetris Game Administrator
+ *Argument: int argc and char** argv
+ *Return: void
+ */
 int main(int argc, char** argv) {
 
 	//Set up framework for the game
@@ -42,8 +42,12 @@ int main(int argc, char** argv) {
 	sprite.setTextureRect(IntRect(0, 0, 27, 27)); //extract only a rectangle of the sprite	
 	
 	//Define array of tetris pieces
+	TetrisPiece pieceArray[NUMPIECE];
 	
+	//Construct pieceArray
+	pieceArrayConstruction(pieceArray);
 
+		
 	//Control the entire game
 	while (gameWindow.isOpen()) {
 		
@@ -60,6 +64,15 @@ int main(int argc, char** argv) {
 		//Clear the screen
 		gameWindow.clear(Color::White);
 		
+		//Displaying sprite of the pieces
+		int piece = 2;
+		for (int i = 0; i < NUMTILES; i++) {
+			int x_tile = (*(pieceArray + piece)).getTile(i) % 2;
+		        int y_tile = (*(pieceArray + piece)).getTile(i) / 2;
+			sprite.setPosition(x_tile * SIZE, y_tile * SIZE);
+			gameWindow.draw(sprite);
+		}	
+
 		//Draw the sprite
 		gameWindow.draw(sprite);
 
@@ -72,3 +85,20 @@ int main(int argc, char** argv) {
 }	
 
 
+void pieceArrayConstruction(TetrisPiece* const pieceArray) {
+	
+	//I piece
+	(*pieceArray).setTile(1, 3, 5, 7);
+	//Z piece
+	(*(pieceArray + 1)).setTile(2, 4, 5, 7);
+	//S piece
+	(*(pieceArray + 2)).setTile(3, 5, 4, 6);
+	//T piece
+	(*(pieceArray + 3)).setTile(3, 5, 4, 7);
+	//L piece
+	(*(pieceArray + 4)).setTile(2, 3, 5, 7);
+	//J piece
+	(*(pieceArray + 5)).setTile(3, 5, 7, 6);
+	//O piece
+	(*(pieceArray + 6)).setTile(2, 3, 4, 5);
+}
