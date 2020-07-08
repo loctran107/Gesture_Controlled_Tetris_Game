@@ -24,7 +24,7 @@ class MatrixTransform {
 		void setAngle(const int angle);
 		
 		//Transform
-		void matrixTransform(const int& x_tile, const int& y_tile);
+		void matrixTransform(int& x_tile, int& y_tile);
 
 	private:
 		int angle_;

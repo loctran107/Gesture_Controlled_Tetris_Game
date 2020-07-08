@@ -8,11 +8,15 @@
 
 #include "TetrisPiece.h"
 #include "PieceController.h"
+#include "MatrixTransform.h"
+
 #define LENGTH 20
 #define WIDTH 10
 #define NUMPIECE 7
 #define NUMTILES 4
 #define SIZE 27
+#define ANGLE 90
+#define CENTER_OF_ROTATION 1
 //global field. Declare static for internal linkage only
 //static int field[LENGTH][WIDTH] = { 0 };
 
@@ -22,11 +26,12 @@ using namespace std;
 //Define array of tetris pieces
 static TetrisPiece pieceArray[NUMPIECE];
 static PieceController control;
+static MatrixTransform matrix(ANGLE);
 
 /*Argument: None
  *Return: void
  */
-void updateMovement();
+void updateRotation(int& x_tile, int& y_tile, const int piece);
 
 /*Argument: array of tetris pieces from the main method
  *Return: void
@@ -92,15 +97,21 @@ int main(int argc, char** argv) {
 		}
 	
 		//updateMovement();
-	 		
+	 			
 		//Clear the screen
 		gameWindow.clear(Color::White);
 		
 		//Displaying sprite of the pieces
-		int piece = 2;
+		int piece = 3;
+		
 		for (int i = 0; i < NUMTILES; i++) {
 			int x_tile = (*(pieceArray + piece)).getTile(i) % 2;
 		        int y_tile = (*(pieceArray + piece)).getTile(i) / 2;
+			 
+			if (control.get_rotate()) {
+				updateRotation(x_tile, y_tile, piece);
+			}
+			
 			sprite.setPosition((x_tile + control.get_dx())  * SIZE, y_tile * SIZE);
 			gameWindow.draw(sprite); //Draw the sprite
 		}	
@@ -113,7 +124,19 @@ int main(int argc, char** argv) {
 	return EXIT_SUCCESS;
 }	
 
-void updateMovement() {
+void updateRotation(int& x_tile, int& y_tile, const int piece) {
+	
+	//Extract tile that is at axis of rotation
+	const int x_axisRotate = (*(pieceArray + piece)).getTile(CENTER_OF_ROTATION) % 2;
+	const int y_axisRotate = (*(pieceArray + piece)).getTile(CENTER_OF_ROTATION) / 2;
+	
+	//Calculate relative coordinate of translation
+	const int x_tile_trans = x_axisRotate - x_tile;
+	const int y_tile_trans = y_axisRotate - y_tile;
+
+	//update the rotation
+	x_tile = x_axisRotate - y_tile_trans;
+	y_tile = y_axisRotate + x_tile_trans;	
 	
 }
 
