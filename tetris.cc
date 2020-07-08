@@ -5,6 +5,8 @@
 #include <SFML/Graphics.hpp>
 #include <cstdlib>
 #include <time.h>
+#include <unistd.h>
+
 
 #include "TetrisPiece.h"
 #include "PieceController.h"
@@ -17,6 +19,7 @@
 #define SIZE 27
 #define ANGLE 90
 #define CENTER_OF_ROTATION 1
+#define TIME_DELAY 0.3
 //global field. Declare static for internal linkage only
 //static int field[LENGTH][WIDTH] = { 0 };
 
@@ -58,16 +61,20 @@ int main(int argc, char** argv) {
 	
 	Sprite sprite(texture); //calling the Sprite constructor
 	sprite.setTextureRect(IntRect(0, 0, 27, 27)); //extract only a rectangle of the sprite	
-	
-	
-	
+		
 	//Construct pieceArray
 	pieceArrayConstruction(pieceArray);
 	
-		
+	float timer = 0;
+	//Start the clock
+	Clock clock; 
+	
 	//Control the entire game
 	while (gameWindow.isOpen()) {
 		
+		float timeElapsed = clock.getElapsedTime().asSeconds();
+		clock.restart();
+		timer += timeElapsed;
 		//Process the event
 		Event e;
 		while (gameWindow.pollEvent(e)) {
@@ -98,11 +105,16 @@ int main(int argc, char** argv) {
 					if (control.get_dx() < 480) {
 						control.set_dx(control.get_dx() + 1);
 					}
-				}
-					
+				}	
 			}
 		}
-	 			
+	 	
+		if (timer > TIME_DELAY) {
+			control.set_dy(control.get_dy() + 1);
+			timer = 0;
+		}
+		
+		
 		//Clear the screen
 		gameWindow.clear(Color::White);
 		
@@ -115,15 +127,16 @@ int main(int argc, char** argv) {
 			 
 			if (control.get_rotate()) {
 				updateRotation(x_tile, y_tile, piece, i);
-			}
-					
-			sprite.setPosition((x_tile + control.get_dx())  * SIZE, y_tile * SIZE);
+			}	
+			
+				
+			sprite.setPosition((x_tile + control.get_dx())  * SIZE, (y_tile + control.get_dy()) * SIZE);
 			gameWindow.draw(sprite); //Draw the sprite
 			
 			
 		}
+		
 
-			
 		//Set rotate to default
 		//Stop the rotate when done
 		control.set_rotate(false);

@@ -7,6 +7,10 @@ void PieceController::set_dx(const int dx) {
 	dx_ = dx;
 }
 
+void PieceController::set_dy(const int dy) {
+	dy_ = dy;
+}
+
 void PieceController::set_rotate(const bool rotate) {
 	rotate_ = rotate;
 }
