@@ -20,6 +20,7 @@ class PieceController {
 		void set_rotate(const bool rotate);
 		void set_color(const int color);
 
+		bool hasReachedBottom(const int dy);
 	private:
 		int dx_; //changes in x
 		int dy_; //changes in y

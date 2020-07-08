@@ -11,9 +11,7 @@
 #include "TetrisPiece.h"
 #include "PieceController.h"
 #include "PointTile.h"
-
-#define LENGTH 20
-#define WIDTH 10
+ 
 #define NUMPIECE 7
 #define NUMTILES 4
 #define SIZE 27
@@ -25,6 +23,10 @@
 
 using namespace sf;
 using namespace std;
+
+//Define gloval variable to all C file (external linkage)
+int WIDTH = 480;
+int LENGTH = 720;
 
 //Define array of tetris pieces
 static TetrisPiece pieceArray[NUMPIECE];
@@ -46,12 +48,12 @@ void printArrayPiece(int piece);
  *Argument: int argc and char** argv
  *Return: void
  */
-
 static int countArray = 1;
+
 int main(int argc, char** argv) {
 
 	//Set up framework for the game
-	RenderWindow gameWindow(VideoMode(480, 720), "Tetris Game!");
+	RenderWindow gameWindow(VideoMode(WIDTH, LENGTH), "Tetris Game!");
 
 	//Load a sprite to display
 	Texture texture;
@@ -64,17 +66,19 @@ int main(int argc, char** argv) {
 		
 	//Construct pieceArray
 	pieceArrayConstruction(pieceArray);
-	
-	float timer = 0;
+
 	//Start the clock
 	Clock clock; 
-	
+	float timer = 0.0;
+
 	//Control the entire game
 	while (gameWindow.isOpen()) {
 		
+		//Find the time elapsed 
 		float timeElapsed = clock.getElapsedTime().asSeconds();
 		clock.restart();
 		timer += timeElapsed;
+		
 		//Process the event
 		Event e;
 		while (gameWindow.pollEvent(e)) {
@@ -102,24 +106,29 @@ int main(int argc, char** argv) {
 
 				//Update dx if pressed right
 				else if (e.key.code == Keyboard::Right) {
-					if (control.get_dx() < 480) {
+					if (control.get_dx() < WIDTH) {
 						control.set_dx(control.get_dx() + 1);
 					}
 				}	
 			}
 		}
 	 	
+		//Tick the piece
 		if (timer > TIME_DELAY) {
-			control.set_dy(control.get_dy() + 1);
-			timer = 0;
+			if (!control.hasReachedBottom(control.get_dy())) {
+				control.set_dy(control.get_dy() + 1);
+			}
+	//		if (countArray) {
+			//cout << control.hasReachedBottom(control.get_dy()) << " " << control.get_dy() << endl;
+			
+			timer = 0.0;
 		}
-		
 		
 		//Clear the screen
 		gameWindow.clear(Color::White);
 		
 		//Displaying sprite of the pieces
-		int piece = 3;
+		int piece = 0;
 		
 		for (int i = 0; i < NUMTILES; i++) {
 			int x_tile = ((*(pieceArray + piece)).getTile(i)).get_x();
@@ -130,11 +139,11 @@ int main(int argc, char** argv) {
 			}	
 			
 				
-			sprite.setPosition((x_tile + control.get_dx())  * SIZE, (y_tile + control.get_dy()) * SIZE);
+			sprite.setPosition((x_tile + control.get_dx()) * SIZE, (y_tile + control.get_dy()) * SIZE);
 			gameWindow.draw(sprite); //Draw the sprite
-			
-			
 		}
+
+		
 		
 
 		//Set rotate to default
