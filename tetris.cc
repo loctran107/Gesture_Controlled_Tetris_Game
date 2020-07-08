@@ -78,19 +78,21 @@ int main(int argc, char** argv) {
 				}
 				
 				//Update dx if pressed left
-				if (e.key.code == Keyboard::Left) {
-					control.set_dx(dx - 1);
+				else if (e.key.code == Keyboard::Left) {
+					control.set_dx(control.get_dx() - 1);
 				}
 
 				//Update dx if pressed right
-				if (e.key.code == Keyboard::Right) {
-					control.set_dx(dx + 1);
+				else if (e.key.code == Keyboard::Right) {
+					control.set_dx(control.get_dx() + 1);
 				}
+				
+				
 			}
 		}
 	
 		//updateMovement();
-		
+	 		
 		//Clear the screen
 		gameWindow.clear(Color::White);
 		
@@ -99,7 +101,7 @@ int main(int argc, char** argv) {
 		for (int i = 0; i < NUMTILES; i++) {
 			int x_tile = (*(pieceArray + piece)).getTile(i) % 2;
 		        int y_tile = (*(pieceArray + piece)).getTile(i) / 2;
-			sprite.setPosition(x_tile * SIZE, y_tile * SIZE);
+			sprite.setPosition((x_tile + control.get_dx())  * SIZE, y_tile * SIZE);
 			gameWindow.draw(sprite); //Draw the sprite
 		}	
 

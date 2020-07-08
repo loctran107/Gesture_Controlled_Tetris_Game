@@ -4,7 +4,7 @@ PROGS=tetris
 
 all: $(PROGS)
 
-tetris: tetris.o TetrisPiece.o
+tetris: tetris.o TetrisPiece.o PieceController.o
 	$(CXX) $(CXXFLAGS) -o $@ $^ -lsfml-graphics -lsfml-window -lsfml-system
 
 tetris.o: tetris.cc TetrisPiece.h
