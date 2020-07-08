@@ -4,7 +4,7 @@ PROGS=tetris
 
 all: $(PROGS)
 
-tetris: tetris.o TetrisPiece.o PieceController.o MatrixTransform.o
+tetris: tetris.o TetrisPiece.o PieceController.o PointTile.o
 	$(CXX) $(CXXFLAGS) -o $@ $^ -lsfml-graphics -lsfml-window -lsfml-system
 
 tetris.o: tetris.cc TetrisPiece.h
@@ -16,7 +16,7 @@ TetrisPiece.o: TetrisPiece.cc TetrisPiece.h
 PieceController.o: PieceController.cc PieceController.h
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
-MatrixTransform.o: MatrixTransform.cc MatrixTransform.h
+PointTile.o: PointTile.cc PointTile.h
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 clean:
 	rm $(PROGS)

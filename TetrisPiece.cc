@@ -3,7 +3,7 @@
 
 using namespace std;
 
-int TetrisPiece::getTile(const int tileNum) {
+PointTile TetrisPiece::getTile(const int tileNum) {
 	
 	switch (tileNum) {
 		case 0:
@@ -15,12 +15,12 @@ int TetrisPiece::getTile(const int tileNum) {
 		case 3: 
 			return tile4_;
 		default:
-			return 0;
-
+			return tile1_;
 	}	
 }
 
-void TetrisPiece::setTile(const int tile1, const int tile2, const int tile3, const int tile4) {
+void TetrisPiece::setTile(const PointTile tile1, const PointTile tile2,
+	                  const PointTile tile3, const PointTile tile4) {
 	tile1_ = tile1;
 	tile2_ = tile2;
 	tile3_ = tile3;

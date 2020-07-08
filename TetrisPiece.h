@@ -1,28 +1,31 @@
 #ifndef _TETRISPIECE_H_
 #define _TETRISPIEEC_H_
 
+#include "PointTile.h"
 #include <cstdlib>
-
 using namespace std;
 class TetrisPiece {
 	
 	public:
-		TetrisPiece() : tile1_(0), tile2_(0), tile3_(0), tile4_(0) { } //default constructor
-		TetrisPiece(int tile1, int tile2, int tile3, int tile4) : tile1_(tile1), tile2_(tile2), tile3_(tile3), tile4_(tile4) { } //constructor
+		TetrisPiece() : tile1_(0,0), tile2_(0,0),
+	       			tile3_(0,0), tile4_(0,0) { } //default constructor
+		TetrisPiece(PointTile tile1, PointTile tile2, PointTile tile3, PointTile tile4) : 
+			   tile1_(tile1), tile2_(tile2), tile3_(tile3), tile4_(tile4) { } //constructor
 		
 	//	~TetrisPiece(); //destructor
 		
 		//Accessors
-		int getTile(const int tileNum);
+		PointTile getTile(const int tileNum);
 		
 		//Mutator
-		void setTile(const int tile1, const int tile2, const int tile3, const int tile4);
+		void setTile(const PointTile tile1, const PointTile tile2,
+			     const PointTile tile3, const PointTile tile4);
 
 	private:
-		int tile1_;
-		int tile2_;
-		int tile3_;
-		int tile4_;
+		PointTile tile1_;
+		PointTile tile2_;
+		PointTile tile3_;
+		PointTile tile4_;
 	
 
 }; //class TetrisPiece

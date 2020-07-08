@@ -8,7 +8,7 @@
 
 #include "TetrisPiece.h"
 #include "PieceController.h"
-#include "MatrixTransform.h"
+#include "PointTile.h"
 
 #define LENGTH 20
 #define WIDTH 10
@@ -26,12 +26,11 @@ using namespace std;
 //Define array of tetris pieces
 static TetrisPiece pieceArray[NUMPIECE];
 static PieceController control;
-static MatrixTransform matrix(ANGLE);
 
 /*Argument: None
  *Return: void
  */
-void updateRotation(int& x_tile, int& y_tile, const int piece);
+void updateRotation(int& x_tile, int& y_tile, const int piece, const int tileIndex);
 
 /*Argument: array of tetris pieces from the main method
  *Return: void
@@ -93,6 +92,9 @@ int main(int argc, char** argv) {
 				}
 				
 				
+			} else {
+				//Shutoff rotate
+				control.set_rotate(false);
 			}
 		}
 	
@@ -105,16 +107,21 @@ int main(int argc, char** argv) {
 		int piece = 3;
 		
 		for (int i = 0; i < NUMTILES; i++) {
-			int x_tile = (*(pieceArray + piece)).getTile(i) % 2;
-		        int y_tile = (*(pieceArray + piece)).getTile(i) / 2;
+			int x_tile = ((*(pieceArray + piece)).getTile(i)).get_x();
+		        int y_tile = ((*(pieceArray + piece)).getTile(i)).get_y();
 			 
 			if (control.get_rotate()) {
-				updateRotation(x_tile, y_tile, piece);
+				updateRotation(x_tile, y_tile, piece, i);
+				
 			}
 			
+					
 			sprite.setPosition((x_tile + control.get_dx())  * SIZE, y_tile * SIZE);
 			gameWindow.draw(sprite); //Draw the sprite
-		}	
+
+			
+		}
+		
 
 		//Update the window
 		gameWindow.display();
@@ -124,11 +131,16 @@ int main(int argc, char** argv) {
 	return EXIT_SUCCESS;
 }	
 
-void updateRotation(int& x_tile, int& y_tile, const int piece) {
+
+void updateRotation(int& x_tile, int& y_tile, const int piece, const int tileIndex) {
+
+//	cout << "Initial x_tile of piece " << piece << " is: " << x_tile << endl;
+//	cout << "Initial y_tile of piece " << piece << " is: " << y_tile << endl;
+
 	
 	//Extract tile that is at axis of rotation
-	const int x_axisRotate = (*(pieceArray + piece)).getTile(CENTER_OF_ROTATION) % 2;
-	const int y_axisRotate = (*(pieceArray + piece)).getTile(CENTER_OF_ROTATION) / 2;
+	const int x_axisRotate = ((*(pieceArray + piece)).getTile(CENTER_OF_ROTATION)).get_x();
+	const int y_axisRotate = ((*(pieceArray + piece)).getTile(CENTER_OF_ROTATION)).get_y();
 	
 	//Calculate relative coordinate of translation
 	const int x_tile_trans = x_axisRotate - x_tile;
@@ -137,24 +149,40 @@ void updateRotation(int& x_tile, int& y_tile, const int piece) {
 	//update the rotation
 	x_tile = x_axisRotate - y_tile_trans;
 	y_tile = y_axisRotate + x_tile_trans;	
-	
+		
+	((*(pieceArray + piece)).getTile(tileIndex)).set_x(x_tile);
+	((*(pieceArray + piece)).getTile(tileIndex)).set_y(y_tile);
+//	cout << "x_tile of piece " << piece << " is: " << x_tile << endl;
+//	cout << "y_tile of piece " << piece << " is: " << y_tile << endl;
+
+	//control.set_rotate(false);
 }
 
 
 void pieceArrayConstruction(TetrisPiece* const pieceArray) {
 	
+	//List of points associated with each tile	
+	PointTile tile_one(0, 0);
+	PointTile tile_two(1, 0);
+	PointTile tile_three(0, 1);
+	PointTile tile_four(1, 1);
+	PointTile tile_five(0, 2);
+	PointTile tile_six(1, 2);
+	PointTile tile_seven(0, 3);
+	PointTile tile_eight(1, 3);
+
 	//I piece
-	(*pieceArray).setTile(1, 3, 5, 7);
+	(*pieceArray).setTile(tile_two, tile_four, tile_six, tile_eight);
 	//Z piece
-	(*(pieceArray + 1)).setTile(2, 4, 5, 7);
+	(*(pieceArray + 1)).setTile(tile_three, tile_five, tile_six, tile_eight);
 	//S piece
-	(*(pieceArray + 2)).setTile(3, 5, 4, 6);
+	(*(pieceArray + 2)).setTile(tile_four, tile_six, tile_five, tile_seven);
 	//T piece
-	(*(pieceArray + 3)).setTile(3, 5, 4, 7);
+	(*(pieceArray + 3)).setTile(tile_four, tile_six, tile_five, tile_eight);
 	//L piece
-	(*(pieceArray + 4)).setTile(2, 3, 5, 7);
+	(*(pieceArray + 4)).setTile(tile_three, tile_four, tile_six, tile_eight);
 	//J piece
-	(*(pieceArray + 5)).setTile(3, 5, 7, 6);
+	(*(pieceArray + 5)).setTile(tile_four, tile_six, tile_eight, tile_seven);
 	//O piece
-	(*(pieceArray + 6)).setTile(2, 3, 4, 5);
+	(*(pieceArray + 6)).setTile(tile_three, tile_four, tile_five, tile_six);
 }
