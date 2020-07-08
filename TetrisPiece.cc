@@ -27,4 +27,24 @@ void TetrisPiece::setTile(const PointTile tile1, const PointTile tile2,
 	tile4_ = tile4;
 }
 
+void TetrisPiece::setTileBasedIndex(const int tileIndex, const PointTile tile) {
+	
+	switch (tileIndex) {
+		case 0:
+			tile1_ = tile;
+			break;
+		case 1: 
+			tile2_ = tile;
+			break;
+		case 2:
+			tile3_ = tile;
+			break;
+		case 3: 
+			tile4_ = tile;
+			break;
+		default:
+			break;
+	}
+}
+
 

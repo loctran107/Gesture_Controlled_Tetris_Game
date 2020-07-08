@@ -37,10 +37,14 @@ void updateRotation(int& x_tile, int& y_tile, const int piece, const int tileInd
  */
 void pieceArrayConstruction(TetrisPiece* pieceArray);
 
+void printArrayPiece(int piece);
+
 /*Tetris Game Administrator
  *Argument: int argc and char** argv
  *Return: void
  */
+
+static int countArray = 1;
 int main(int argc, char** argv) {
 
 	//Set up framework for the game
@@ -90,15 +94,9 @@ int main(int argc, char** argv) {
 				else if (e.key.code == Keyboard::Right) {
 					control.set_dx(control.get_dx() + 1);
 				}
-				
-				
-			} else {
-				//Shutoff rotate
-				control.set_rotate(false);
+					
 			}
 		}
-	
-		//updateMovement();
 	 			
 		//Clear the screen
 		gameWindow.clear(Color::White);
@@ -112,15 +110,17 @@ int main(int argc, char** argv) {
 			 
 			if (control.get_rotate()) {
 				updateRotation(x_tile, y_tile, piece, i);
-				
 			}
-			
 					
 			sprite.setPosition((x_tile + control.get_dx())  * SIZE, y_tile * SIZE);
 			gameWindow.draw(sprite); //Draw the sprite
-
+			
 			
 		}
+		
+		//Set rotate to default
+		//Stop the rotate when done
+		control.set_rotate(false);
 		
 
 		//Update the window
@@ -131,12 +131,23 @@ int main(int argc, char** argv) {
 	return EXIT_SUCCESS;
 }	
 
+//Write a method that prints out the current pieceArray
+void printArrayPiece(int piece) {
+	
+	if (countArray) {
+		for (int i = 0; i < NUMTILES; i++) {
+			cout << endl;
+			int x_tile = ((*(pieceArray + piece)).getTile(i)).get_x();
+			int y_tile = ((*(pieceArray + piece)).getTile(i)).get_y();
+			cout << "x tile of " << i << " is " << x_tile << endl;
+			cout << "y tile of " << i << " is " << y_tile << endl;
+			cout << endl;
+		}
+		countArray--;
+	}
 
+}
 void updateRotation(int& x_tile, int& y_tile, const int piece, const int tileIndex) {
-
-//	cout << "Initial x_tile of piece " << piece << " is: " << x_tile << endl;
-//	cout << "Initial y_tile of piece " << piece << " is: " << y_tile << endl;
-
 	
 	//Extract tile that is at axis of rotation
 	const int x_axisRotate = ((*(pieceArray + piece)).getTile(CENTER_OF_ROTATION)).get_x();
@@ -149,13 +160,10 @@ void updateRotation(int& x_tile, int& y_tile, const int piece, const int tileInd
 	//update the rotation
 	x_tile = x_axisRotate - y_tile_trans;
 	y_tile = y_axisRotate + x_tile_trans;	
-		
-	((*(pieceArray + piece)).getTile(tileIndex)).set_x(x_tile);
-	((*(pieceArray + piece)).getTile(tileIndex)).set_y(y_tile);
-//	cout << "x_tile of piece " << piece << " is: " << x_tile << endl;
-//	cout << "y_tile of piece " << piece << " is: " << y_tile << endl;
 
-	//control.set_rotate(false);
+	//Update the tile	
+	PointTile p1(x_tile, y_tile);
+	(*(pieceArray + piece)).setTileBasedIndex(tileIndex, p1);
 }
 
 
@@ -171,11 +179,11 @@ void pieceArrayConstruction(TetrisPiece* const pieceArray) {
 	PointTile tile_seven(0, 3);
 	PointTile tile_eight(1, 3);
 
-	//I piece
+	//I piece (checked)
 	(*pieceArray).setTile(tile_two, tile_four, tile_six, tile_eight);
-	//Z piece
+	//Z piece (checked)
 	(*(pieceArray + 1)).setTile(tile_three, tile_five, tile_six, tile_eight);
-	//S piece
+	//S piece 
 	(*(pieceArray + 2)).setTile(tile_four, tile_six, tile_five, tile_seven);
 	//T piece
 	(*(pieceArray + 3)).setTile(tile_four, tile_six, tile_five, tile_eight);

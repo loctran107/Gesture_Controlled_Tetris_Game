@@ -20,7 +20,7 @@ class TetrisPiece {
 		//Mutator
 		void setTile(const PointTile tile1, const PointTile tile2,
 			     const PointTile tile3, const PointTile tile4);
-
+		void setTileBasedIndex(const int tileIndex, const PointTile tile);
 	private:
 		PointTile tile1_;
 		PointTile tile2_;
