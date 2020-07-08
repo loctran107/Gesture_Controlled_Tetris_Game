@@ -85,14 +85,19 @@ int main(int argc, char** argv) {
 					control.set_rotate(true);
 				}
 				
+				//<--BOUNDS CHECKING-->
 				//Update dx if pressed left
 				else if (e.key.code == Keyboard::Left) {
-					control.set_dx(control.get_dx() - 1);
+					if (control.get_dx() > 0) {
+						control.set_dx(control.get_dx() - 1);
+					}
 				}
 
 				//Update dx if pressed right
 				else if (e.key.code == Keyboard::Right) {
-					control.set_dx(control.get_dx() + 1);
+					if (control.get_dx() < 480) {
+						control.set_dx(control.get_dx() + 1);
+					}
 				}
 					
 			}
@@ -117,7 +122,8 @@ int main(int argc, char** argv) {
 			
 			
 		}
-		
+
+			
 		//Set rotate to default
 		//Stop the rotate when done
 		control.set_rotate(false);
@@ -131,6 +137,7 @@ int main(int argc, char** argv) {
 	return EXIT_SUCCESS;
 }	
 
+//Learn how to customize assert function
 //Write a method that prints out the current pieceArray
 void printArrayPiece(int piece) {
 	
@@ -147,6 +154,8 @@ void printArrayPiece(int piece) {
 	}
 
 }
+
+
 void updateRotation(int& x_tile, int& y_tile, const int piece, const int tileIndex) {
 	
 	//Extract tile that is at axis of rotation
