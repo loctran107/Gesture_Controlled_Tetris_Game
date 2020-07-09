@@ -4,17 +4,23 @@ PROGS=tetris testTile
 
 all: $(PROGS)
 
-tetris: tetris.o TetrisPiece.o PieceController.o PointTile.o
+tetris: tetris.o Field.o TetrisPiece.o PieceController.o PointTile.o
 	$(CXX) $(CXXFLAGS) -o $@ $^ -lsfml-graphics -lsfml-window -lsfml-system
 
+#-------TEST-------#
 testTile: testTile.o PointTile.o
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 testTile.o: testTile.cc PointTile.h
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
+#-------TEST-------#
+
 
 tetris.o: tetris.cc TetrisPiece.h
+	$(CXX) $(CXXFLAGS) -o $@ -c $<
+
+Field.o: Field.cc Field.h
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 TetrisPiece.o: TetrisPiece.cc TetrisPiece.h

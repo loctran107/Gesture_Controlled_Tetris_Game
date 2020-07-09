@@ -11,6 +11,7 @@
 #include "TetrisPiece.h"
 #include "PieceController.h"
 #include "PointTile.h"
+#include "Field.h"
  
 #define NUMPIECE 7
 #define NUMTILES 4
@@ -25,8 +26,8 @@ using namespace sf;
 using namespace std;
 
 //Define gloval variable to all C file (external linkage)
-int WIDTH = 480;
-int LENGTH = 720;
+int WIDTH = 486; //For tile size of 27
+int HEIGHT = 729; //7 times of 27
 
 //Define array of tetris pieces
 static TetrisPiece pieceArray[NUMPIECE];
@@ -53,13 +54,18 @@ static int countArray = 1;
 int main(int argc, char** argv) {
 
 	//Set up framework for the game
-	RenderWindow gameWindow(VideoMode(WIDTH, LENGTH), "Tetris Game!");
+	RenderWindow gameWindow(VideoMode(WIDTH, HEIGHT), "Tetris Game!");
+	
+	//Creating tetris field
+	Field field(WIDTH, HEIGHT);
 
 	//Load a sprite to display
 	Texture texture;
 	if (!texture.loadFromFile("tiles.png")) {
 		return EXIT_FAILURE;
 	}
+	
+		
 	
 	Sprite sprite(texture); //calling the Sprite constructor
 	sprite.setTextureRect(IntRect(0, 0, 27, 27)); //extract only a rectangle of the sprite	
@@ -79,6 +85,7 @@ int main(int argc, char** argv) {
 		clock.restart();
 		timer += timeElapsed;
 		
+		int piece = 1;
 		//Process the event
 		Event e;
 		while (gameWindow.pollEvent(e)) {
@@ -88,6 +95,7 @@ int main(int argc, char** argv) {
 				gameWindow.close();
 			}
 			
+
 			//Handle key pressed on keyboard mode
 			if (e.type == Event::KeyPressed) {
 
@@ -99,14 +107,16 @@ int main(int argc, char** argv) {
 				//<--BOUNDS CHECKING-->
 				//Update dx if pressed left
 				else if (e.key.code == Keyboard::Left) {
-					if (control.get_dx() > 0) {
+					//cout << control.get_dx() << endl;
+					if (!(field.hasPieceReachedBounds(pieceArray, piece, NUMTILES, control.get_dx(), false))) {
 						control.set_dx(control.get_dx() - 1);
 					}
 				}
 
 				//Update dx if pressed right
 				else if (e.key.code == Keyboard::Right) {
-					if (control.get_dx() < WIDTH) {
+					//cout << control.get_dx() << endl;
+					if (!(field.hasPieceReachedBounds(pieceArray, piece, NUMTILES, control.get_dx(), true))) {
 						control.set_dx(control.get_dx() + 1);
 					}
 				}	
@@ -115,21 +125,19 @@ int main(int argc, char** argv) {
 	 	
 		//Tick the piece
 		if (timer > TIME_DELAY) {
-			if (!control.hasReachedBottom(control.get_dy())) {
+			if (!(field.hasPieceReachedBottom(pieceArray, piece, NUMTILES, control.get_dy()))) {
 				control.set_dy(control.get_dy() + 1);
 			}
-	//		if (countArray) {
-			//cout << control.hasReachedBottom(control.get_dy()) << " " << control.get_dy() << endl;
+
 			
 			timer = 0.0;
 		}
 		
 		//Clear the screen
 		gameWindow.clear(Color::White);
-		
-		//Displaying sprite of the pieces
-		int piece = 0;
-		
+	
+	
+		//Displaying the sprite of the pieces	
 		for (int i = 0; i < NUMTILES; i++) {
 			int x_tile = ((*(pieceArray + piece)).getTile(i)).get_x();
 		        int y_tile = ((*(pieceArray + piece)).getTile(i)).get_y();
@@ -144,13 +152,12 @@ int main(int argc, char** argv) {
 		}
 
 		
-		
 
 		//Set rotate to default
 		//Stop the rotate when done
 		control.set_rotate(false);
 		
-
+		
 		//Update the window
 		gameWindow.display();
 
@@ -200,7 +207,7 @@ void updateRotation(int& x_tile, int& y_tile, const int piece, const int tileInd
 
 void pieceArrayConstruction(TetrisPiece* const pieceArray) {
 	
-	//List of points associated with each tile	
+	//List of pointTile associated with each tile	
 	PointTile tile_one(0, 0);
 	PointTile tile_two(1, 0);
 	PointTile tile_three(0, 1);

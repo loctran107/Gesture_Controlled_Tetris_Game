@@ -1,8 +1,9 @@
 #ifndef _TETRISPIECE_H_
-#define _TETRISPIEEC_H_
+#define _TETRISPIECE_H_
 
 #include "PointTile.h"
 #include <cstdlib>
+
 using namespace std;
 class TetrisPiece {
 	
