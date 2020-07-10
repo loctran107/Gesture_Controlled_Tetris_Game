@@ -1,6 +1,6 @@
 CXX=g++
 CXXFLAGS=-Wall -std=c++11 -g
-PROGS=tetris testTile
+PROGS=tetris testTile main
 
 all: $(PROGS)
 
@@ -16,6 +16,8 @@ testTile.o: testTile.cc PointTile.h
 
 #-------TEST-------#
 
+main: main.cpp
+	$(CXX) $(CXXFLAGS) -o $@ $^ -lsfml-graphics -lsfml-window -lsfml-system
 
 tetris.o: tetris.cc TetrisPiece.h
 	$(CXX) $(CXXFLAGS) -o $@ -c $<

@@ -2,6 +2,7 @@
 /*Tetris program controlled using keyboard or using flex sensor
  */
 
+//NO CHAINING OBJECTS, UNLESS INHERITANCE REQUIRED
 #include <SFML/Graphics.hpp>
 #include <cstdlib>
 #include <time.h>
@@ -18,7 +19,7 @@
 #define NUMPIECE 7
 #define NUMTILES 4
 #define CENTER_OF_ROTATION 1
-#define TIME_DELAY 0.3
+#define TIME_DELAY 0.4
 //global field. Declare static for internal linkage only
 //static int field[LENGTH][WIDTH] = { 0 };
 
@@ -101,8 +102,10 @@ int main(int argc, char** argv) {
 
 				//Rotate if pressed UP
 				if (e.key.code == Keyboard::Up) {
-					if (!(field.hasPieceReachedBounds(pieceArray, piece, NUMTILES, 
+					//cout << "dx " << control.get_dx() << endl;
+					if (!(field.hasPieceReachedBounds(pieceArray, &control, piece, NUMTILES, 
 									  control.get_dx(), Stringizing(ROTATE)))) {
+					//	cout << "I'm here" << endl;
 						control.set_rotate(true);
 					}
 				}
@@ -111,32 +114,36 @@ int main(int argc, char** argv) {
 				//Update dx if pressed left
 				else if (e.key.code == Keyboard::Left) {
 					//cout << control.get_dx() << endl;
-					if (!(field.hasPieceReachedBounds(pieceArray, piece, NUMTILES,
+					if (!(field.hasPieceReachedBounds(pieceArray, &control, piece, NUMTILES,
 								          control.get_dx(), Stringizing(LEFT)))) {
+						//cout << "Current: " << control.get_dx() << endl;
 						control.set_dx(control.get_dx() - 1);
+						//cout << "New: " << control.get_dx() << endl;
 					}
 				}
 
 				//Update dx if pressed right
 				else if (e.key.code == Keyboard::Right) {
 					//cout << control.get_dx() << endl;
-					if (!(field.hasPieceReachedBounds(pieceArray, piece, NUMTILES, 
+					if (!(field.hasPieceReachedBounds(pieceArray, &control, piece, NUMTILES, 
 									  control.get_dx(), Stringizing(RIGHT)))) {
+						//cout << "Current: " << control.get_dx() << endl;
 						control.set_dx(control.get_dx() + 1);
+						//cout << "New: " << control.get_dx() << endl;
 					}
 				}	
 			}
 		}
 	 	
 		//Tick the piece
-		if (timer > TIME_DELAY) {
+		/*if (timer > TIME_DELAY) {
 			if (!(field.hasPieceReachedBottom(pieceArray, piece, NUMTILES, control.get_dy()))) {
 				control.set_dy(control.get_dy() + 1);
 			}
 
 			
 			timer = 0.0;
-		}
+		}*/
 		
 		//Clear the screen
 		gameWindow.clear(Color::White);
@@ -148,7 +155,7 @@ int main(int argc, char** argv) {
 		        int y_tile = ((*(pieceArray + piece)).getTile(i)).get_y();
 			 
 			if (control.get_rotate()) {
-				updateRotation(x_tile, y_tile, piece, i);
+				control.updateRotation(x_tile, y_tile, piece, i, pieceArray, true);
 			}	
 			
 				
@@ -188,27 +195,6 @@ void printArrayPiece(int piece) {
 	}
 
 }
-
-
-void updateRotation(int& x_tile, int& y_tile, const int piece, const int tileIndex) {
-	
-	//Extract tile that is at axis of rotation
-	const int x_axisRotate = ((*(pieceArray + piece)).getTile(CENTER_OF_ROTATION)).get_x();
-	const int y_axisRotate = ((*(pieceArray + piece)).getTile(CENTER_OF_ROTATION)).get_y();
-	
-	//Calculate relative coordinate of translation
-	const int x_tile_trans = x_axisRotate - x_tile;
-	const int y_tile_trans = y_axisRotate - y_tile;
-
-	//update the rotation
-	x_tile = x_axisRotate - y_tile_trans;
-	y_tile = y_axisRotate + x_tile_trans;	
-
-	//Update the tile	
-	PointTile p1(x_tile, y_tile);
-	(*(pieceArray + piece)).setTileBasedIndex(tileIndex, p1);
-}
-
 
 void pieceArrayConstruction(TetrisPiece* const pieceArray) {
 	

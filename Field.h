@@ -2,6 +2,7 @@
 #define _FIELD_H_
 #include <cstdlib>
 #include "TetrisPiece.h"
+#include "PieceController.h"
 
 class Field {
 
@@ -10,8 +11,8 @@ class Field {
 		bool hasPieceReachedBottom(TetrisPiece* const pieceArray, const int piece, 
 				           const int numTiles, const int dy);
 				
-		bool hasPieceReachedBounds(TetrisPiece* const pieceArray, const int piece,
-					   const int numTiles, const int dx, string opt);
+		bool hasPieceReachedBounds(TetrisPiece* const pieceArray, PieceController* control,
+			            	   const int piece, const int numTiles, const int dx, string opt);
 		
 		bool get_hasReachedBottom() { return hasReachedBottom_; }
 		bool get_hasReachedBounds() { return hasReachedBounds_; }
@@ -25,7 +26,6 @@ class Field {
 		int height_;
 		bool hasReachedBottom_;
 		bool hasReachedBounds_;
-
 		
 }; //class Field
 

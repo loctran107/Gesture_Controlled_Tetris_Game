@@ -1,6 +1,8 @@
 #ifndef _PIECECONTROLLER_H_
 #define _PIECECONTROLLER_H_
 #include <cstdlib>
+#include "PointTile.h"
+#include "TetrisPiece.h"
 
 class PieceController {
 	
@@ -19,7 +21,11 @@ class PieceController {
 		void set_dy(const int dy);
 		void set_rotate(const bool rotate);
 		void set_color(const int color);
-
+		
+		//Update Rotation
+		void updateRotation(int& x_tile, int& y_tile, const int piece, const int tileIndex,
+			       	    TetrisPiece* const tetrisPiece, const bool updateOrNot);	
+		
 	private:
 		int dx_; //changes in x
 		int dy_; //changes in y
