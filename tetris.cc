@@ -13,10 +13,10 @@
 #include "PointTile.h"
 #include "Field.h"
  
+#define Stringizing( x ) #x //stringizing definition
+#define SIZE 27
 #define NUMPIECE 7
 #define NUMTILES 4
-#define SIZE 27
-#define ANGLE 90
 #define CENTER_OF_ROTATION 1
 #define TIME_DELAY 0.3
 //global field. Declare static for internal linkage only
@@ -101,14 +101,18 @@ int main(int argc, char** argv) {
 
 				//Rotate if pressed UP
 				if (e.key.code == Keyboard::Up) {
-					control.set_rotate(true);
+					if (!(field.hasPieceReachedBounds(pieceArray, piece, NUMTILES, 
+									  control.get_dx(), Stringizing(ROTATE)))) {
+						control.set_rotate(true);
+					}
 				}
 				
 				//<--BOUNDS CHECKING-->
 				//Update dx if pressed left
 				else if (e.key.code == Keyboard::Left) {
 					//cout << control.get_dx() << endl;
-					if (!(field.hasPieceReachedBounds(pieceArray, piece, NUMTILES, control.get_dx(), false))) {
+					if (!(field.hasPieceReachedBounds(pieceArray, piece, NUMTILES,
+								          control.get_dx(), Stringizing(LEFT)))) {
 						control.set_dx(control.get_dx() - 1);
 					}
 				}
@@ -116,7 +120,8 @@ int main(int argc, char** argv) {
 				//Update dx if pressed right
 				else if (e.key.code == Keyboard::Right) {
 					//cout << control.get_dx() << endl;
-					if (!(field.hasPieceReachedBounds(pieceArray, piece, NUMTILES, control.get_dx(), true))) {
+					if (!(field.hasPieceReachedBounds(pieceArray, piece, NUMTILES, 
+									  control.get_dx(), Stringizing(RIGHT)))) {
 						control.set_dx(control.get_dx() + 1);
 					}
 				}	
