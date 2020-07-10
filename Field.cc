@@ -12,13 +12,16 @@
 
 using namespace std;
 
-bool Field::hasPieceReachedBottom(TetrisPiece* const pieceArray, const int piece,
-	       			  const int numTiles, const int dy) {
+bool Field::hasPieceReachedBottom(TetrisPiece* const pieceArray, PieceController* const control,
+	          	          const int piece, const int numTiles, const int dy) {
 	int i;
 	TetrisPiece tetrisPiece = *(pieceArray + piece);
 	for (i = 0; i < numTiles; i++) {
-		//int x_tile = (tetrisPiece_.getTile(i)).get_x();
+	//	int x_tile = (tetrisPiece.getTile(i)).get_x();
 		int y_tile = (tetrisPiece.getTile(i)).get_y();
+	/*	if (rotateOrNot) {
+			control->updateRotation(x_tile, y_tile, piece, i, pieceArray, false);
+		}*/
 		if (((y_tile + dy) * 27) + 27 >= height_) {
 			return set_hasReachedBottom(true);;
 		}	
@@ -28,7 +31,7 @@ bool Field::hasPieceReachedBottom(TetrisPiece* const pieceArray, const int piece
 }
 
 bool Field::hasPieceReachedBounds(TetrisPiece* const pieceArray, PieceController* const control,
-		                  const int piece, const int numTiles, const int dx, string opt) {
+		                  const int piece, const int numTiles, const int dx, const string opt) {
 	int i;
 	TetrisPiece tetrisPiece = *(pieceArray + piece);
 	for (i = 0; i < numTiles; i++) {

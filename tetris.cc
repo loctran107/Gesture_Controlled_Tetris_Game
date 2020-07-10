@@ -19,7 +19,7 @@
 #define NUMPIECE 7
 #define NUMTILES 4
 #define CENTER_OF_ROTATION 1
-#define TIME_DELAY 0.4
+#define TIME_DELAY 0.2
 //global field. Declare static for internal linkage only
 //static int field[LENGTH][WIDTH] = { 0 };
 
@@ -86,7 +86,7 @@ int main(int argc, char** argv) {
 		clock.restart();
 		timer += timeElapsed;
 		
-		int piece = 1;
+		int piece = 3;
 		//Process the event
 		Event e;
 		while (gameWindow.pollEvent(e)) {
@@ -102,10 +102,8 @@ int main(int argc, char** argv) {
 
 				//Rotate if pressed UP
 				if (e.key.code == Keyboard::Up) {
-					//cout << "dx " << control.get_dx() << endl;
 					if (!(field.hasPieceReachedBounds(pieceArray, &control, piece, NUMTILES, 
 									  control.get_dx(), Stringizing(ROTATE)))) {
-					//	cout << "I'm here" << endl;
 						control.set_rotate(true);
 					}
 				}
@@ -113,37 +111,31 @@ int main(int argc, char** argv) {
 				//<--BOUNDS CHECKING-->
 				//Update dx if pressed left
 				else if (e.key.code == Keyboard::Left) {
-					//cout << control.get_dx() << endl;
 					if (!(field.hasPieceReachedBounds(pieceArray, &control, piece, NUMTILES,
 								          control.get_dx(), Stringizing(LEFT)))) {
-						//cout << "Current: " << control.get_dx() << endl;
 						control.set_dx(control.get_dx() - 1);
-						//cout << "New: " << control.get_dx() << endl;
 					}
 				}
 
 				//Update dx if pressed right
 				else if (e.key.code == Keyboard::Right) {
-					//cout << control.get_dx() << endl;
 					if (!(field.hasPieceReachedBounds(pieceArray, &control, piece, NUMTILES, 
 									  control.get_dx(), Stringizing(RIGHT)))) {
-						//cout << "Current: " << control.get_dx() << endl;
 						control.set_dx(control.get_dx() + 1);
-						//cout << "New: " << control.get_dx() << endl;
 					}
 				}	
 			}
 		}
 	 	
 		//Tick the piece
-		/*if (timer > TIME_DELAY) {
-			if (!(field.hasPieceReachedBottom(pieceArray, piece, NUMTILES, control.get_dy()))) {
+		if (timer > TIME_DELAY) {
+			if (!(field.hasPieceReachedBottom(pieceArray, &control, piece, NUMTILES, control.get_dy()))) {
 				control.set_dy(control.get_dy() + 1);
+			} else {
+				control.set_rotate(false);
 			}
-
-			
 			timer = 0.0;
-		}*/
+		} 
 		
 		//Clear the screen
 		gameWindow.clear(Color::White);
@@ -153,7 +145,6 @@ int main(int argc, char** argv) {
 		for (int i = 0; i < NUMTILES; i++) {
 			int x_tile = ((*(pieceArray + piece)).getTile(i)).get_x();
 		        int y_tile = ((*(pieceArray + piece)).getTile(i)).get_y();
-			 
 			if (control.get_rotate()) {
 				control.updateRotation(x_tile, y_tile, piece, i, pieceArray, true);
 			}	

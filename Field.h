@@ -8,11 +8,11 @@ class Field {
 
 	public:
 		Field(const int width, const int height) : width_(width), height_(height) { }
-		bool hasPieceReachedBottom(TetrisPiece* const pieceArray, const int piece, 
-				           const int numTiles, const int dy);
+		bool hasPieceReachedBottom(TetrisPiece* const pieceArray, PieceController* const control,
+				           const int piece, const int numTiles, const int dy);
 				
-		bool hasPieceReachedBounds(TetrisPiece* const pieceArray, PieceController* control,
-			            	   const int piece, const int numTiles, const int dx, string opt);
+		bool hasPieceReachedBounds(TetrisPiece* const pieceArray, PieceController* const control,
+			            	   const int piece, const int numTiles, const int dx, const string opt);
 		
 		bool get_hasReachedBottom() { return hasReachedBottom_; }
 		bool get_hasReachedBounds() { return hasReachedBounds_; }
