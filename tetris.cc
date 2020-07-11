@@ -18,7 +18,8 @@
 #define NUMPIECE 7
 #define NUMTILES 4
 #define CENTER_OF_ROTATION 1
-
+#define ROW 27
+#define COLUMN 18
 //global field. Declare static for internal linkage only
 //static int field[LENGTH][WIDTH] = { 0 };
 
@@ -33,6 +34,7 @@ int HEIGHT = 729; //7 times of 27
 static TetrisPiece pieceArray[NUMPIECE];
 static PieceController control;
 
+static int countArray = 1;
 /*Argument: None
  *Return: void
  */
@@ -45,12 +47,12 @@ void pieceArrayConstruction(TetrisPiece* pieceArray);
 
 void printArrayPiece(int piece);
 
+
+
 /*Tetris Game Administrator
  *Argument: int argc and char** argv
  *Return: void
  */
-static int countArray = 1;
-
 int main(int argc, char** argv) {
 
 	//Set up framework for the game
@@ -135,6 +137,9 @@ int main(int argc, char** argv) {
 				control.set_dy(control.get_dy() + 1);
 			} else {
 				
+				//Make the piece stick to the field
+				field.stick_piece(pieceArray, control.get_piece(), NUMTILES, control.get_dx(), control.get_dy());
+					
 				//Set up new piece	
 				control.set_piece();
 				control.set_color();
@@ -151,7 +156,17 @@ int main(int argc, char** argv) {
 		//Clear the screen
 		gameWindow.clear(Color::White);
 	
-	
+		for (int i = 0; i < HEIGHT / SIZE; i++) { //ROW
+			for (int j = 0; j < WIDTH / SIZE; j++) { //COLUMN
+				PointTile p = field.get_pointTile(j, i);
+				if (p.get_x() == -1 && p.get_y() == -1) {
+					continue;
+				}
+				sprite.setPosition(p.get_x(), p.get_y());
+				gameWindow.draw(sprite);
+			}
+		}
+
 		//Displaying the sprite of the pieces	
 		for (int i = 0; i < NUMTILES; i++) {
 			int x_tile = ((*(pieceArray + control.get_piece())).getTile(i)).get_x();

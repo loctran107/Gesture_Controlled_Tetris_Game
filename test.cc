@@ -13,6 +13,9 @@ void reference(int& a, int& b) {
 int main(int argc, char** argv) {
 	int x = 1;
 	int y = 2;
+	
+	int matrix[3][4] = { 0 };
+	cout << matrix[1][0] << endl;
 	reference(x, y);
 	cout << "x is " << x << endl;
 	sleep(5);
