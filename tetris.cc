@@ -6,7 +6,6 @@
 #include <SFML/Graphics.hpp>
 #include <cstdlib>
 #include <time.h>
-#include <unistd.h>
 
 
 #include "TetrisPiece.h"
@@ -19,7 +18,7 @@
 #define NUMPIECE 7
 #define NUMTILES 4
 #define CENTER_OF_ROTATION 1
-#define TIME_DELAY 0.2
+
 //global field. Declare static for internal linkage only
 //static int field[LENGTH][WIDTH] = { 0 };
 
@@ -66,10 +65,8 @@ int main(int argc, char** argv) {
 		return EXIT_FAILURE;
 	}
 	
-		
-	
 	Sprite sprite(texture); //calling the Sprite constructor
-	sprite.setTextureRect(IntRect(0, 0, 27, 27)); //extract only a rectangle of the sprite	
+
 		
 	//Construct pieceArray
 	pieceArrayConstruction(pieceArray);
@@ -80,13 +77,14 @@ int main(int argc, char** argv) {
 
 	//Control the entire game
 	while (gameWindow.isOpen()) {
+
+		sprite.setTextureRect(IntRect(SIZE * control.get_color(), 0, SIZE, SIZE)); //extract only a rectangle of the sprite			
 		
 		//Find the time elapsed 
 		float timeElapsed = clock.getElapsedTime().asSeconds();
 		clock.restart();
 		timer += timeElapsed;
 		
-		int piece = 3;
 		//Process the event
 		Event e;
 		while (gameWindow.pollEvent(e)) {
@@ -102,7 +100,7 @@ int main(int argc, char** argv) {
 
 				//Rotate if pressed UP
 				if (e.key.code == Keyboard::Up) {
-					if (!(field.hasPieceReachedBounds(pieceArray, &control, piece, NUMTILES, 
+					if (!(field.hasPieceReachedBounds(pieceArray, &control, control.get_piece(), NUMTILES, 
 									  control.get_dx(), Stringizing(ROTATE)))) {
 						control.set_rotate(true);
 					}
@@ -111,7 +109,7 @@ int main(int argc, char** argv) {
 				//<--BOUNDS CHECKING-->
 				//Update dx if pressed left
 				else if (e.key.code == Keyboard::Left) {
-					if (!(field.hasPieceReachedBounds(pieceArray, &control, piece, NUMTILES,
+					if (!(field.hasPieceReachedBounds(pieceArray, &control, control.get_piece(), NUMTILES,
 								          control.get_dx(), Stringizing(LEFT)))) {
 						control.set_dx(control.get_dx() - 1);
 					}
@@ -119,42 +117,53 @@ int main(int argc, char** argv) {
 
 				//Update dx if pressed right
 				else if (e.key.code == Keyboard::Right) {
-					if (!(field.hasPieceReachedBounds(pieceArray, &control, piece, NUMTILES, 
+					if (!(field.hasPieceReachedBounds(pieceArray, &control, control.get_piece(), NUMTILES, 
 									  control.get_dx(), Stringizing(RIGHT)))) {
 						control.set_dx(control.get_dx() + 1);
 					}
+				}
+
+				else if (e.key.code == Keyboard::Down) {
+					control.set_delay(0.01);								
 				}	
-			}
+			} 
 		}
 	 	
 		//Tick the piece
-		if (timer > TIME_DELAY) {
-			if (!(field.hasPieceReachedBottom(pieceArray, &control, piece, NUMTILES, control.get_dy()))) {
+		if (timer > control.get_delay()) {
+			if (!(field.hasPieceReachedBottom(pieceArray, &control, control.get_piece(), NUMTILES, control.get_dy()))) {
 				control.set_dy(control.get_dy() + 1);
 			} else {
+				
+				//Set up new piece	
+				control.set_piece();
+				control.set_color();
+				control.set_dx(rand() % ((WIDTH / SIZE) - SIZE));
+				control.set_dy(0);
 				control.set_rotate(false);
 			}
 			timer = 0.0;
 		} 
 		
+		//Reset to default delay
+		control.set_delay(0.3);
+
 		//Clear the screen
 		gameWindow.clear(Color::White);
 	
 	
 		//Displaying the sprite of the pieces	
 		for (int i = 0; i < NUMTILES; i++) {
-			int x_tile = ((*(pieceArray + piece)).getTile(i)).get_x();
-		        int y_tile = ((*(pieceArray + piece)).getTile(i)).get_y();
+			int x_tile = ((*(pieceArray + control.get_piece())).getTile(i)).get_x();
+		        int y_tile = ((*(pieceArray + control.get_piece())).getTile(i)).get_y();
 			if (control.get_rotate()) {
-				control.updateRotation(x_tile, y_tile, piece, i, pieceArray, true);
+				control.updateRotation(x_tile, y_tile, control.get_piece(), i, pieceArray, true);
 			}	
 			
 				
 			sprite.setPosition((x_tile + control.get_dx()) * SIZE, (y_tile + control.get_dy()) * SIZE);
 			gameWindow.draw(sprite); //Draw the sprite
 		}
-
-		
 
 		//Set rotate to default
 		//Stop the rotate when done

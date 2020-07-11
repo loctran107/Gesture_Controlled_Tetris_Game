@@ -97,7 +97,8 @@ int main()
          for (int i=0;i<4;i++) field[b[i].y][b[i].x]=colorNum;
 
          colorNum=1+rand()%7;
-         int n=rand()%7;
+         //int n=rand()%7;
+	 int n = 4;
          for (int i=0;i<4;i++)
            {
             a[i].x = figures[n][i] % 2;
