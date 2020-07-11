@@ -80,8 +80,6 @@ int main(int argc, char** argv) {
 	//Control the entire game
 	while (gameWindow.isOpen()) {
 
-		sprite.setTextureRect(IntRect(SIZE * control.get_color(), 0, SIZE, SIZE)); //extract only a rectangle of the sprite			
-		
 		//Find the time elapsed 
 		float timeElapsed = clock.getElapsedTime().asSeconds();
 		clock.restart();
@@ -133,12 +131,13 @@ int main(int argc, char** argv) {
 	 	
 		//Tick the piece
 		if (timer > control.get_delay()) {
-			if (!(field.hasPieceReachedBottom(pieceArray, &control, control.get_piece(), NUMTILES, control.get_dy()))) {
+			if (!(field.hasPieceReachedBottomOrOTherPiece(pieceArray, &control, control.get_piece(), NUMTILES, control.get_dy()))) {
 				control.set_dy(control.get_dy() + 1);
 			} else {
 				
 				//Make the piece stick to the field
-				field.stick_piece(pieceArray, control.get_piece(), NUMTILES, control.get_dx(), control.get_dy());
+				field.stick_piece(pieceArray, control.get_piece(), control.get_color(), 
+						  NUMTILES, control.get_dx(), control.get_dy());
 					
 				//Set up new piece	
 				control.set_piece();
@@ -158,11 +157,12 @@ int main(int argc, char** argv) {
 	
 		for (int i = 0; i < HEIGHT / SIZE; i++) { //ROW
 			for (int j = 0; j < WIDTH / SIZE; j++) { //COLUMN
-				PointTile p = field.get_pointTile(j, i);
-				if (p.get_x() == -1 && p.get_y() == -1) {
+				int pieceColor = field.getFieldMatrix(i, j);
+				if (pieceColor == -1){
 					continue;
 				}
-				sprite.setPosition(p.get_x(), p.get_y());
+				sprite.setTextureRect(IntRect(SIZE * pieceColor, 0, SIZE, SIZE));
+				sprite.setPosition(j * SIZE, i * SIZE);
 				gameWindow.draw(sprite);
 			}
 		}
@@ -175,7 +175,7 @@ int main(int argc, char** argv) {
 				control.updateRotation(x_tile, y_tile, control.get_piece(), i, pieceArray, true);
 			}	
 			
-				
+	        	sprite.setTextureRect(IntRect(SIZE * control.get_color(), 0, SIZE, SIZE)); //extract only a rectangle of the sprite			
 			sprite.setPosition((x_tile + control.get_dx()) * SIZE, (y_tile + control.get_dy()) * SIZE);
 			gameWindow.draw(sprite); //Draw the sprite
 		}

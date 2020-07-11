@@ -64,15 +64,14 @@ bool Field::set_hasReachedBounds(const bool hasReachedBounds) {
 	return hasReachedBounds_;
 }
 
-void Field::stick_piece(TetrisPiece* const pieceArray, const int piece, const int numTiles,
-			const int dx, const int dy) {
+void Field::stick_piece(TetrisPiece* const pieceArray, const int piece, const int color,
+		        const int numTiles, const int dx, const int dy) {
 	int i;
 	int x_tile, y_tile;
 	for (i = 0; i < numTiles; i++) {
 		x_tile = ((*(pieceArray + piece)).getTile(i).get_x());
 		y_tile = ((*(pieceArray + piece)).getTile(i).get_y());
-		PointTile p((x_tile + dx) * SIZE, (y_tile + dy) * SIZE);
-		fieldMatrix[y_tile + dy][x_tile + dx] = p;
+		fieldMatrix[y_tile + dy][x_tile + dx] = color;
 	}
 }
 
