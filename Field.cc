@@ -30,7 +30,7 @@ bool Field::hasPieceReachedBottomOrOtherPiece(TetrisPiece* const pieceArray, Pie
 	return set_hasReachedBottomOrOtherPiece(false);
 }
 
-bool Field::hasPieceReachedBounds(TetrisPiece* const pieceArray, PieceController* const control,
+bool Field::hasPieceReachedBoundsOrOtherPiece(TetrisPiece* const pieceArray, PieceController* const control,
 		                  const int piece, const int numTiles, const int dx, const int dy, const string opt) {
 	int i;
 	TetrisPiece tetrisPiece = *(pieceArray + piece);
@@ -81,3 +81,23 @@ void Field::stick_piece(TetrisPiece* const pieceArray, const int piece, const in
 	}
 }
 
+void Field::checkLines() {
+	
+	int i, j;
+	int count; //Count the piece that are occupied in that row
+	//Check lines from the bottom
+	int lineBottom = ROW - 1;
+	for (i = lineBottom; i > 0; i--) {
+		count = 0;
+		for (j = 0; j < COLUMN; j++) {
+			if (fieldMatrix[i][j] > -1) {
+				count++;
+			} 
+			fieldMatrix[lineBottom][j] = fieldMatrix[i][j];
+		}
+		
+		if (count < COLUMN) {
+			lineBottom--;
+		}
+	}
+}

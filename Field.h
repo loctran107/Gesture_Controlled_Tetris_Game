@@ -23,7 +23,7 @@ class Field {
 		bool hasPieceReachedBottomOrOtherPiece(TetrisPiece* const pieceArray, PieceController* const control,
 				                       const int piece, const int numTiles, const int dx, const int dy);
 				
-		bool hasPieceReachedBounds(TetrisPiece* const pieceArray, PieceController* const control,
+		bool hasPieceReachedBoundsOrOtherPiece(TetrisPiece* const pieceArray, PieceController* const control,
 			            	   const int piece, const int numTiles, const int dx, const int dy, const string opt);
 
 		void stick_piece(TetrisPiece* const pieceArray, const int piece, const int color,
@@ -32,6 +32,7 @@ class Field {
 		bool get_hasReachedBottom() { return hasReachedBottom_; }
 		bool get_hasReachedBounds() { return hasReachedBounds_; }
 		int getFieldMatrix(const int dy, const int dx) { return fieldMatrix[dy][dx]; }
+		void checkLines();
 	private:
 		
 		bool set_hasReachedBottomOrOtherPiece(const bool hasReachedBottom);

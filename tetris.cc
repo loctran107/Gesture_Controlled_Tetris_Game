@@ -100,7 +100,7 @@ int main(int argc, char** argv) {
 
 				//Rotate if pressed UP
 				if (e.key.code == Keyboard::Up) {
-					if (!(field.hasPieceReachedBounds(pieceArray, &control, control.get_piece(), NUMTILES, 
+					if (!(field.hasPieceReachedBoundsOrOtherPiece(pieceArray, &control, control.get_piece(), NUMTILES, 
 									  control.get_dx(), control.get_dy(), Stringizing(ROTATE)))) {
 						control.set_rotate(true);
 					}
@@ -109,7 +109,7 @@ int main(int argc, char** argv) {
 				//<--BOUNDS CHECKING-->
 				//Update dx if pressed left
 				else if (e.key.code == Keyboard::Left) {
-					if (!(field.hasPieceReachedBounds(pieceArray, &control, control.get_piece(), NUMTILES,
+					if (!(field.hasPieceReachedBoundsOrOtherPiece(pieceArray, &control, control.get_piece(), NUMTILES,
 								          control.get_dx(), control.get_dy(), Stringizing(LEFT)))) {
 						control.set_dx(control.get_dx() - 1);
 					}
@@ -117,16 +117,18 @@ int main(int argc, char** argv) {
 
 				//Update dx if pressed right
 				else if (e.key.code == Keyboard::Right) {
-					if (!(field.hasPieceReachedBounds(pieceArray, &control, control.get_piece(), NUMTILES, 
+					if (!(field.hasPieceReachedBoundsOrOtherPiece(pieceArray, &control, control.get_piece(), NUMTILES, 
 									  control.get_dx(), control.get_dy(), Stringizing(RIGHT)))) {
 						control.set_dx(control.get_dx() + 1);
 					}
 				}
 
-				else if (e.key.code == Keyboard::Down) {
-					control.set_delay(0.01);								
-				}	
+					
 			} 
+		}
+
+		if (Keyboard::isKeyPressed(Keyboard::Down)) {
+			control.set_delay(0.05);
 		}
 	 	
 		//Tick the piece
@@ -156,7 +158,11 @@ int main(int argc, char** argv) {
 
 		//Clear the screen
 		gameWindow.clear(Color::White);
-	
+		
+		//Check and eliminate lines if necessary
+		field.checkLines();
+
+		//Draw the field
 		for (int i = 0; i < HEIGHT / SIZE; i++) { //ROW
 			for (int j = 0; j < WIDTH / SIZE; j++) { //COLUMN
 				int pieceColor = field.getFieldMatrix(i, j);
