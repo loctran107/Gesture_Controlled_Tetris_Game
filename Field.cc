@@ -13,22 +13,25 @@
 
 using namespace std;
 
-bool Field::hasPieceReachedBottom(TetrisPiece* const pieceArray, PieceController* const control,
-	          	          const int piece, const int numTiles, const int dy) {
+bool Field::hasPieceReachedBottomOrOtherPiece(TetrisPiece* const pieceArray, PieceController* const control,
+	          	          const int piece, const int numTiles, const int dx, const int dy) {
 	int i;
 	TetrisPiece tetrisPiece = *(pieceArray + piece);
 	for (i = 0; i < numTiles; i++) {
+		int x_tile = (tetrisPiece.getTile(i)).get_x();
 		int y_tile = (tetrisPiece.getTile(i)).get_y();
+		//cout << fieldMatrix[y_tile + dy][x_tile + dx] << endl;	
 		if (((y_tile + dy) * 27) + 27 >= height_) {
-			return set_hasReachedBottom(true);;
+			return set_hasReachedBottomOrOtherPiece(true);
+		} else if (fieldMatrix[y_tile + dy + 1][x_tile + dx] > -1) {
+			return set_hasReachedBottomOrOtherPiece(true);
 		}	
-
 	}
-	return set_hasReachedBottom(false);
+	return set_hasReachedBottomOrOtherPiece(false);
 }
 
 bool Field::hasPieceReachedBounds(TetrisPiece* const pieceArray, PieceController* const control,
-		                  const int piece, const int numTiles, const int dx, const string opt) {
+		                  const int piece, const int numTiles, const int dx, const int dy, const string opt) {
 	int i;
 	TetrisPiece tetrisPiece = *(pieceArray + piece);
 	for (i = 0; i < numTiles; i++) {
@@ -47,14 +50,17 @@ bool Field::hasPieceReachedBounds(TetrisPiece* const pieceArray, PieceController
 			if ((((x_tile + dx) * 27) + 27) >= width_) {
 				return set_hasReachedBounds(true);
 			}
-		} else {
-			return set_hasReachedBounds(false);
+		}
+
+		if (fieldMatrix[y_tile + dy][x_tile + dx + 1] > -1 ||
+		    fieldMatrix[y_tile + dy][x_tile + dx - 1] > -1) {
+			return set_hasReachedBounds(true);
 		}
 	}
 	return set_hasReachedBounds(false);
 }
 
-bool Field::set_hasReachedBottom(const bool hasReachedBottom) {
+bool Field::set_hasReachedBottomOrOtherPiece(const bool hasReachedBottom) {
 	hasReachedBottom_ = hasReachedBottom;
 	return hasReachedBottom_;
 }

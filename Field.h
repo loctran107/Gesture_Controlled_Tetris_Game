@@ -20,11 +20,11 @@ class Field {
 			}
 		}		
 
-		bool hasPieceReachedBottom(TetrisPiece* const pieceArray, PieceController* const control,
-				           const int piece, const int numTiles, const int dy);
+		bool hasPieceReachedBottomOrOtherPiece(TetrisPiece* const pieceArray, PieceController* const control,
+				                       const int piece, const int numTiles, const int dx, const int dy);
 				
 		bool hasPieceReachedBounds(TetrisPiece* const pieceArray, PieceController* const control,
-			            	   const int piece, const int numTiles, const int dx, const string opt);
+			            	   const int piece, const int numTiles, const int dx, const int dy, const string opt);
 
 		void stick_piece(TetrisPiece* const pieceArray, const int piece, const int color,
 				const int numTiles, const int dx, const int dy);	
@@ -34,7 +34,7 @@ class Field {
 		int getFieldMatrix(const int dy, const int dx) { return fieldMatrix[dy][dx]; }
 	private:
 		
-		bool set_hasReachedBottom(const bool hasReachedBottom);
+		bool set_hasReachedBottomOrOtherPiece(const bool hasReachedBottom);
 		bool set_hasReachedBounds(const bool hasReachedBounds);
 		
 		//Properties

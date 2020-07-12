@@ -101,7 +101,7 @@ int main(int argc, char** argv) {
 				//Rotate if pressed UP
 				if (e.key.code == Keyboard::Up) {
 					if (!(field.hasPieceReachedBounds(pieceArray, &control, control.get_piece(), NUMTILES, 
-									  control.get_dx(), Stringizing(ROTATE)))) {
+									  control.get_dx(), control.get_dy(), Stringizing(ROTATE)))) {
 						control.set_rotate(true);
 					}
 				}
@@ -110,7 +110,7 @@ int main(int argc, char** argv) {
 				//Update dx if pressed left
 				else if (e.key.code == Keyboard::Left) {
 					if (!(field.hasPieceReachedBounds(pieceArray, &control, control.get_piece(), NUMTILES,
-								          control.get_dx(), Stringizing(LEFT)))) {
+								          control.get_dx(), control.get_dy(), Stringizing(LEFT)))) {
 						control.set_dx(control.get_dx() - 1);
 					}
 				}
@@ -118,7 +118,7 @@ int main(int argc, char** argv) {
 				//Update dx if pressed right
 				else if (e.key.code == Keyboard::Right) {
 					if (!(field.hasPieceReachedBounds(pieceArray, &control, control.get_piece(), NUMTILES, 
-									  control.get_dx(), Stringizing(RIGHT)))) {
+									  control.get_dx(), control.get_dy(), Stringizing(RIGHT)))) {
 						control.set_dx(control.get_dx() + 1);
 					}
 				}
@@ -131,10 +131,12 @@ int main(int argc, char** argv) {
 	 	
 		//Tick the piece
 		if (timer > control.get_delay()) {
-			if (!(field.hasPieceReachedBottomOrOTherPiece(pieceArray, &control, control.get_piece(), NUMTILES, control.get_dy()))) {
+			if (!(field.hasPieceReachedBottomOrOtherPiece(pieceArray, &control, control.get_piece(), 
+							              NUMTILES, control.get_dx(), control.get_dy()))) {
+				//cout << "I'm here" << endl; 
 				control.set_dy(control.get_dy() + 1);
 			} else {
-				
+			 	//cout << "I'm here too" << endl;	
 				//Make the piece stick to the field
 				field.stick_piece(pieceArray, control.get_piece(), control.get_color(), 
 						  NUMTILES, control.get_dx(), control.get_dy());
