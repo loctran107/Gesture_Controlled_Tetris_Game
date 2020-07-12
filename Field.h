@@ -5,8 +5,8 @@
 #include "TetrisPiece.h"
 #include "PieceController.h"
 
-#define ROW 27
-#define COLUMN 18
+#define ROW 24
+#define COLUMN 14
 
 class Field {
 
@@ -33,6 +33,7 @@ class Field {
 		bool get_hasReachedBounds() { return hasReachedBounds_; }
 		int getFieldMatrix(const int dy, const int dx) { return fieldMatrix[dy][dx]; }
 		void checkLines();
+		bool checkLoss();
 	private:
 		
 		bool set_hasReachedBottomOrOtherPiece(const bool hasReachedBottom);

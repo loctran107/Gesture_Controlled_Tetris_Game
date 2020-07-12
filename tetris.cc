@@ -18,8 +18,8 @@
 #define NUMPIECE 7
 #define NUMTILES 4
 #define CENTER_OF_ROTATION 1
-#define ROW 27
-#define COLUMN 18
+#define ROW 24
+#define COLUMN 14
 //global field. Declare static for internal linkage only
 //static int field[LENGTH][WIDTH] = { 0 };
 
@@ -27,14 +27,13 @@ using namespace sf;
 using namespace std;
 
 //Define gloval variable to all C file (external linkage)
-int WIDTH = 486; //For tile size of 27
-int HEIGHT = 729; //7 times of 27
+int WIDTH = 378; //14 times of 27
+int HEIGHT = 648; //24 times of 27
 
 //Define array of tetris pieces
 static TetrisPiece pieceArray[NUMPIECE];
 static PieceController control;
 
-static int countArray = 1;
 /*Argument: None
  *Return: void
  */
@@ -80,6 +79,8 @@ int main(int argc, char** argv) {
 	//Control the entire game
 	while (gameWindow.isOpen()) {
 
+			
+	
 		//Find the time elapsed 
 		float timeElapsed = clock.getElapsedTime().asSeconds();
 		clock.restart();
@@ -110,7 +111,7 @@ int main(int argc, char** argv) {
 				//Update dx if pressed left
 				else if (e.key.code == Keyboard::Left) {
 					if (!(field.hasPieceReachedBoundsOrOtherPiece(pieceArray, &control, control.get_piece(), NUMTILES,
-								          control.get_dx(), control.get_dy(), Stringizing(LEFT)))) {
+									  control.get_dx(), control.get_dy(), Stringizing(LEFT)))) {
 						control.set_dx(control.get_dx() - 1);
 					}
 				}
@@ -127,18 +128,17 @@ int main(int argc, char** argv) {
 			} 
 		}
 
+		//Speed up if pressing down
 		if (Keyboard::isKeyPressed(Keyboard::Down)) {
 			control.set_delay(0.05);
 		}
-	 	
+		
 		//Tick the piece
 		if (timer > control.get_delay()) {
 			if (!(field.hasPieceReachedBottomOrOtherPiece(pieceArray, &control, control.get_piece(), 
-							              NUMTILES, control.get_dx(), control.get_dy()))) {
-				//cout << "I'm here" << endl; 
+								      NUMTILES, control.get_dx(), control.get_dy()))) { 
 				control.set_dy(control.get_dy() + 1);
 			} else {
-			 	//cout << "I'm here too" << endl;	
 				//Make the piece stick to the field
 				field.stick_piece(pieceArray, control.get_piece(), control.get_color(), 
 						  NUMTILES, control.get_dx(), control.get_dy());
@@ -152,7 +152,7 @@ int main(int argc, char** argv) {
 			}
 			timer = 0.0;
 		} 
-		
+	
 		//Reset to default delay
 		control.set_delay(0.3);
 
@@ -175,23 +175,26 @@ int main(int argc, char** argv) {
 			}
 		}
 
-		//Displaying the sprite of the pieces	
-		for (int i = 0; i < NUMTILES; i++) {
-			int x_tile = ((*(pieceArray + control.get_piece())).getTile(i)).get_x();
-		        int y_tile = ((*(pieceArray + control.get_piece())).getTile(i)).get_y();
-			if (control.get_rotate()) {
-				control.updateRotation(x_tile, y_tile, control.get_piece(), i, pieceArray, true);
-			}	
-			
-	        	sprite.setTextureRect(IntRect(SIZE * control.get_color(), 0, SIZE, SIZE)); //extract only a rectangle of the sprite			
-			sprite.setPosition((x_tile + control.get_dx()) * SIZE, (y_tile + control.get_dy()) * SIZE);
-			gameWindow.draw(sprite); //Draw the sprite
-		}
+		//Check for losing
+		if (!(field.checkLoss())) {
 
-		//Set rotate to default
-		//Stop the rotate when done
-		control.set_rotate(false);
-		
+			//Displaying the sprite of the pieces	
+			for (int i = 0; i < NUMTILES; i++) {
+				int x_tile = ((*(pieceArray + control.get_piece())).getTile(i)).get_x();
+				int y_tile = ((*(pieceArray + control.get_piece())).getTile(i)).get_y();
+				if (control.get_rotate()) {
+					control.updateRotation(x_tile, y_tile, control.get_piece(), i, pieceArray, true);
+				}	
+				
+				sprite.setTextureRect(IntRect(SIZE * control.get_color(), 0, SIZE, SIZE)); //extract only a rectangle of the sprite			
+				sprite.setPosition((x_tile + control.get_dx()) * SIZE, (y_tile + control.get_dy()) * SIZE);
+				gameWindow.draw(sprite); //Draw the sprite
+			}
+
+			//Set rotate to default
+			//Stop the rotate when done
+			control.set_rotate(false);
+		}		
 		
 		//Update the window
 		gameWindow.display();
@@ -203,21 +206,6 @@ int main(int argc, char** argv) {
 
 //Learn how to customize assert function
 //Write a method that prints out the current pieceArray
-void printArrayPiece(int piece) {
-	
-	if (countArray) {
-		for (int i = 0; i < NUMTILES; i++) {
-			cout << endl;
-			int x_tile = ((*(pieceArray + piece)).getTile(i)).get_x();
-			int y_tile = ((*(pieceArray + piece)).getTile(i)).get_y();
-			cout << "x tile of " << i << " is " << x_tile << endl;
-			cout << "y tile of " << i << " is " << y_tile << endl;
-			cout << endl;
-		}
-		countArray--;
-	}
-
-}
 
 void pieceArrayConstruction(TetrisPiece* const pieceArray) {
 	

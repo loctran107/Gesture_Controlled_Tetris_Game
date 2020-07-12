@@ -101,3 +101,16 @@ void Field::checkLines() {
 		}
 	}
 }
+
+bool Field::checkLoss() {
+	int i, j;
+	
+	for (i = 0; i < ROW - 20; i++) {
+		for (j = 0; j < COLUMN; j++) {
+			if (fieldMatrix[i][j] > -1) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
