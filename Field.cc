@@ -105,7 +105,7 @@ void Field::checkLines(PieceController* const control) {
 			lineBottom--;
 		} else {
 			set_score(get_score() + POINT);	
-			control->set_default_delay(control->get_default_delay() - 0.05);
+			control->set_default_delay(control->get_default_delay() - 0.01);
 			cout << "Player current score is: " << get_score() << endl;
 			
 		}

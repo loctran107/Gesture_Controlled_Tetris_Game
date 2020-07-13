@@ -1,7 +1,7 @@
 #include <cstdlib> //rand
 #include "PieceController.h"
 #define CENTER_OF_ROTATION 1
-#define NUMPIECE 6
+#define NUMPIECE 7
 #define NUMCOLOR 8
 
 using namespace std;
