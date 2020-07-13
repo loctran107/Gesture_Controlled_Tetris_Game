@@ -34,11 +34,6 @@ int HEIGHT = 648; //24 times of 27
 static TetrisPiece pieceArray[NUMPIECE];
 static PieceController control;
 
-/*Argument: None
- *Return: void
- */
-void updateRotation(int& x_tile, int& y_tile, const int piece, const int tileIndex);
-
 /*Argument: array of tetris pieces from the main method
  *Return: void
  */
@@ -62,7 +57,7 @@ int main(int argc, char** argv) {
 
 	//Load a sprite to display
 	Texture texture;
-	if (!texture.loadFromFile("tiles.png")) {
+	if (!texture.loadFromFile("images/tiles.png")) {
 		return EXIT_FAILURE;
 	}
 	
