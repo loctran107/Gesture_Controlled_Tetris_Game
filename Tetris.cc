@@ -1,38 +1,7 @@
-//Author: Donavan Tran
-/*Tetris program controlled using keyboard or using flex sensor
- */
-
-//NO CHAINING OBJECTS, UNLESS INHERITANCE REQUIRED
-/*#include <SFML/Graphics.hpp>
-#include <cstdlib>
-#include <time.h>
-
-#include "TetrisPiece.h"
-#include "PieceController.h"
-#include "PointTile.h"
-#include "Field.h"
- 
-#define Stringizing( x ) #x //stringizing definition
-#define SIZE 27
-#define NUMPIECE 7
-#define NUMTILES 4
-#define CENTER_OF_ROTATION 1
-#define ROW 24
-#define COLUMN 14*/
-//global field. Declare static for internal linkage only
-
 #include "Tetris.h"
 using namespace sf;
 using namespace std;
 
-/*//Define gloval variable to all C file (external linkage)
-static int WIDTH = 378; //14 times of 27
-static int HEIGHT = 648; //24 times of 27
-
-//Define array of tetris pieces
-static TetrisPiece pieceArray[NUMPIECE];
-static PieceController control;
-*/
 /*Tetris Game Administrator
  *Argument: int argc and char** argv
  *Return: void
