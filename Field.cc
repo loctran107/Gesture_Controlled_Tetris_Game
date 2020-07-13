@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Field.h"
 #define SIZE 27
+#define POINT 5
 
 //Error when #include "TetrisPiece.h": explain this later
 
@@ -70,6 +71,10 @@ bool Field::set_hasReachedBounds(const bool hasReachedBounds) {
 	return hasReachedBounds_;
 }
 
+void Field::set_score(const int score) {
+	score_ = score;	
+}
+
 void Field::stick_piece(TetrisPiece* const pieceArray, const int piece, const int color,
 		        const int numTiles, const int dx, const int dy) {
 	int i;
@@ -81,7 +86,7 @@ void Field::stick_piece(TetrisPiece* const pieceArray, const int piece, const in
 	}
 }
 
-void Field::checkLines() {
+void Field::checkLines(PieceController* const control) {
 	
 	int i, j;
 	int count; //Count the piece that are occupied in that row
@@ -98,6 +103,11 @@ void Field::checkLines() {
 		
 		if (count < COLUMN) {
 			lineBottom--;
+		} else {
+			set_score(get_score() + POINT);	
+			control->set_default_delay(control->get_default_delay() - 0.05);
+			cout << "Player current score is: " << get_score() << endl;
+			
 		}
 	}
 }

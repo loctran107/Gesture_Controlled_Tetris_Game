@@ -74,7 +74,7 @@ int main(int argc, char** argv) {
 
 	//Start the clock
 	Clock clock; 
-	float timer = 0.0;
+	double timer = 0.0;
 
 	//Control the entire game
 	while (gameWindow.isOpen()) {
@@ -82,7 +82,7 @@ int main(int argc, char** argv) {
 			
 	
 		//Find the time elapsed 
-		float timeElapsed = clock.getElapsedTime().asSeconds();
+		double timeElapsed = clock.getElapsedTime().asSeconds();
 		clock.restart();
 		timer += timeElapsed;
 		
@@ -127,7 +127,7 @@ int main(int argc, char** argv) {
 					
 			} 
 		}
-
+		
 		//Speed up if pressing down
 		if (Keyboard::isKeyPressed(Keyboard::Down)) {
 			control.set_delay(0.05);
@@ -135,32 +135,34 @@ int main(int argc, char** argv) {
 		
 		//Tick the piece
 		if (timer > control.get_delay()) {
-			if (!(field.hasPieceReachedBottomOrOtherPiece(pieceArray, &control, control.get_piece(), 
-								      NUMTILES, control.get_dx(), control.get_dy()))) { 
+			if (!field.hasPieceReachedBottomOrOtherPiece(pieceArray, &control, control.get_piece(), 
+								      NUMTILES, control.get_dx(), control.get_dy())) { 
 				control.set_dy(control.get_dy() + 1);
 			} else {
-				//Make the piece stick to the field
-				field.stick_piece(pieceArray, control.get_piece(), control.get_color(), 
-						  NUMTILES, control.get_dx(), control.get_dy());
-					
-				//Set up new piece	
-				control.set_piece();
-				control.set_color();
-				control.set_dx(rand() % ((WIDTH / SIZE) - SIZE));
-				control.set_dy(0);
-				control.set_rotate(false);
+				if (!field.checkLoss()) {
+					//Make the piece stick to the field
+					field.stick_piece(pieceArray, control.get_piece(), control.get_color(), 
+							  NUMTILES, control.get_dx(), control.get_dy());
+						
+					//Set up new piece	
+					control.set_piece();
+					control.set_color();
+					control.set_dx(rand() % ((WIDTH / SIZE) - SIZE));
+					control.set_dy(0);
+					control.set_rotate(false);
+				}
 			}
 			timer = 0.0;
 		} 
 	
 		//Reset to default delay
-		control.set_delay(0.3);
+		control.set_delay(control.get_default_delay());
 
 		//Clear the screen
 		gameWindow.clear(Color::White);
 		
 		//Check and eliminate lines if necessary
-		field.checkLines();
+		field.checkLines(&control);
 
 		//Draw the field
 		for (int i = 0; i < HEIGHT / SIZE; i++) { //ROW

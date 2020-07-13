@@ -17,7 +17,7 @@ void PieceController::set_rotate(const bool rotate) {
 	rotate_ = rotate;
 }
 
-void PieceController::set_delay(const float delay) {
+void PieceController::set_delay(const double delay) {
 	delay_ = delay;
 }
 void PieceController::set_color() {
@@ -28,6 +28,10 @@ void PieceController::set_piece() {
 	piece_ = rand() % NUMPIECE; //0-6
 }
 
+void PieceController::set_default_delay(const double default_delay) {
+	default_delay_ = default_delay;
+	delay_ = default_delay_;
+}
 
 void PieceController::updateRotation(int& x_tile, int& y_tile, const int piece, const int tileIndex,
 	       			     TetrisPiece* const pieceArray, bool const updateOrNot) {

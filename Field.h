@@ -11,7 +11,7 @@
 class Field {
 
 	public:
-		Field(const int width, const int height) : width_(width), height_(height) { 
+		Field(const int width, const int height) : width_(width), height_(height), score_(0) { 
 			int i, j;
 			for (i = 0; i < ROW; i++) {
 				for (j = 0; j < COLUMN; j++) {
@@ -32,16 +32,19 @@ class Field {
 		bool get_hasReachedBottom() { return hasReachedBottom_; }
 		bool get_hasReachedBounds() { return hasReachedBounds_; }
 		int getFieldMatrix(const int dy, const int dx) { return fieldMatrix[dy][dx]; }
-		void checkLines();
+		void checkLines(PieceController* const control);
 		bool checkLoss();
+		int get_score() { return score_; }
 	private:
 		
 		bool set_hasReachedBottomOrOtherPiece(const bool hasReachedBottom);
 		bool set_hasReachedBounds(const bool hasReachedBounds);
+		void set_score(const int score);
 		
 		//Properties
 		int width_;
 		int height_;
+		int score_;
 		bool hasReachedBottom_;
 		bool hasReachedBounds_;
 		int fieldMatrix[ROW][COLUMN];
