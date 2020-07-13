@@ -1,22 +1,10 @@
 CXX=g++
 CXXFLAGS=-Wall -std=c++11 -g
-PROGS=tetris testTile main
+PROGS=tetris
 
 all: $(PROGS)
 
 tetris: tetris.o Field.o TetrisPiece.o PieceController.o PointTile.o
-	$(CXX) $(CXXFLAGS) -o $@ $^ -lsfml-graphics -lsfml-window -lsfml-system
-
-#-------TEST-------#
-testTile: testTile.o PointTile.o
-	$(CXX) $(CXXFLAGS) -o $@ $^
-
-testTile.o: testTile.cc PointTile.h
-	$(CXX) $(CXXFLAGS) -o $@ -c $<
-
-#-------TEST-------#
-
-main: main.cpp
 	$(CXX) $(CXXFLAGS) -o $@ $^ -lsfml-graphics -lsfml-window -lsfml-system
 
 tetris.o: tetris.cc TetrisPiece.h
